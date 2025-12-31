@@ -19,9 +19,14 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
-    genre : {
+    genre: {
         type: String,
         required: true
+    },
+    brand: {
+        type: String,
+        required: true,
+        trim: true
     },
     createdAt: {
         type: Date,

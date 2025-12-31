@@ -7,15 +7,22 @@ export const protect = async (req, res, next) => {
         token = req.headers.authorization.split(' ')[1];
     }
     if (!token) {
+        console.log('No token provided');
         return res.status(401).json({ message: 'Not authorized, no token' });
     }
     try {
+        console.log('Token:', token);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Decoded token:', decoded);
         req.user = await User.findById(decoded.id).select('-password');
+        console.log('User found:', req.user ? req.user.email : 'No user');
+        if (!req.user) {
+            return res.status(401).json({ message: 'User not found' });
+        }
         next();
     }
     catch (error) {
-        console.error(error);
+        console.error('Auth error:', error);
         res.status(401).json({ message: 'Not authorized, token failed' });
     }
 }

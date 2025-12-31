@@ -12,6 +12,11 @@ import Footer from './components/Footer.jsx'
 import ProductDetails from './pages/ProductDetails.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
+import Cart from './pages/Cart.jsx'
+import Checkout from './pages/Checkout.jsx'
+import OrderConfirmation from './pages/OrderConfirmation.jsx'
+import MyOrders from './pages/MyOrders.jsx'
+import { CartProvider } from './context/CartContext.jsx'
 
 
 const App = () => {
@@ -19,27 +24,34 @@ const App = () => {
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
-    <div className="overflow-x-hidden max-w-full">
-      {!isAdminRoute && <Header />}
-      <Routes>
-        <Route path='/' element={<Navigate to='/home' replace />} />
-        <Route path='/home' element={<Home />} />
-        <Route path='/products' element={<Products />} />
-        <Route path='/about-us' element={<AboutUs />} />
-        <Route path='/contact-us' element={<ContactUs />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/verify-otp' element={<VerifyOtp />} />
-        <Route path="/products/:id" element={<ProductDetails />} />
+    <CartProvider>
+      <div className="overflow-x-hidden max-w-full">
+        {!isAdminRoute && <Header />}
+        <Routes>
+          <Route path='/' element={<Navigate to='/home' replace />} />
+          <Route path='/home' element={<Home />} />
+          <Route path='/products' element={<Products />} />
+          <Route path='/about-us' element={<AboutUs />} />
+          <Route path='/contact-us' element={<ContactUs />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/verify-otp' element={<VerifyOtp />} />
+          <Route path="/products/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+          <Route path="/my-orders" element={<MyOrders />} />
 
-        {/* Admin Routes */}
-        <Route path='/admin/login' element={<AdminLogin />} />
-        <Route path='/admin/dashboard' element={<AdminDashboard />} />
+          {/* Admin Routes */}
+          <Route path='/admin/login' element={<AdminLogin />} />
+          <Route path='/admin/dashboard' element={<AdminDashboard />} />
 
-      </Routes>
-      {!isAdminRoute && <Footer />}
-    </div>
+        </Routes>
+        {!isAdminRoute && <Footer />}
+      </div>
+    </CartProvider>
   )
 }
 
 export default App
+

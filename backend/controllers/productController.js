@@ -3,16 +3,15 @@ import Products from '../models/Products.js';
 export const createProduct = async (req, res) => {
     try {
         // Enforce strict fields from the request body
-        const { title, author, description, price, genre, image } = req.body;
+        const { title, description, price, genre, brand, image } = req.body;
 
         const product = await Products.create({
             title,
-            author,
             description,
             price,
             genre,
-            image,
-            createdBy: req.user._id
+            brand,
+            image
         });
         res.status(201).json({ message: 'Product created successfully', product });
     } catch (error) {

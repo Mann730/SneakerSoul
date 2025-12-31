@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext.jsx";
 
 const Header = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -7,6 +8,7 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
+  const { cartCount } = useCart();
 
   // Read auth from localStorage
   useEffect(() => {
@@ -71,6 +73,21 @@ const Header = () => {
             </Link>
           ))}
 
+          {/* Cart Icon */}
+          {loggedIn && (
+            <Link
+              to="/cart"
+              className="relative rounded-md px-3 py-2 transition hover:bg-white/10"
+            >
+              <span className="text-xl">🛒</span>
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          )}
+
           {!loggedIn && (
             <>
               <Link
@@ -106,6 +123,18 @@ const Header = () => {
               {/* Dropdown */}
               {showMenu && (
                 <div className="absolute right-0 mt-2 w-44 rounded-md border border-white/20 bg-slate-950/95 py-1 text-xs shadow-2xl z-[999] backdrop-blur">
+
+                  {/* My Orders */}
+                  <button
+                    type="button"
+                    className="block w-full px-3 py-2 text-left text-white hover:bg-white/10"
+                    onClick={() => {
+                      setShowMenu(false);
+                      navigate("/my-orders");
+                    }}
+                  >
+                    My Orders
+                  </button>
 
                   {/* Manage Profile */}
                   <button

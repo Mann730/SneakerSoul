@@ -45,9 +45,13 @@ app.use(express.json());
 //Import Routes
 import authRoutes from './routes/user.js';
 import productRoutes from './routes/productRoutes.js';
+import cartRoutes from './routes/cartRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 
 app.use('/api/admin/products', productRoutes);
 app.use("/api/products", productRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 // use Routes
 

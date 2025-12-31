@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getProductById } from "../services/productServices.js";
+import { useCart } from "../context/CartContext.jsx";
 
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [addingToCart, setAddingToCart] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -151,7 +154,7 @@ function ProductDetails() {
               <div className="space-y-1">
                 <p className="font-bold text-black uppercase tracking-wide text-xs">Brand</p>
                 <p className="text-gray-700 font-semibold text-base">
-                  {product.author || "Unknown Brand"}
+                  {product.brand || product.author || "Unknown Brand"}
                 </p>
               </div>
               <div className="space-y-1">
@@ -173,9 +176,29 @@ function ProductDetails() {
               transition={{ delay: 0.9 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full sm:w-auto px-8 py-4 rounded-lg bg-black text-white font-bold text-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-white hover:text-black transition-all duration-200 uppercase tracking-wide"
+              onClick={async () => {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                  alert('Please login to add items to cart');
+                  navigate('/login');
+                  return;
+                }
+
+                setAddingToCart(true);
+                try {
+                  await addToCart(product._id, 1);
+                  alert('Product added to cart successfully!');
+                  navigate('/cart');
+                } catch (error) {
+                  alert(error.message || 'Failed to add to cart. Please try again.');
+                } finally {
+                  setAddingToCart(false);
+                }
+              }}
+              disabled={addingToCart}
+              className="w-full sm:w-auto px-8 py-4 rounded-lg bg-black text-white font-bold text-lg border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:bg-white hover:text-black transition-all duration-200 uppercase tracking-wide disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Add to Cart
+              {addingToCart ? 'Adding...' : 'Add to Cart'}
             </motion.button>
           </div>
         </motion.div>
